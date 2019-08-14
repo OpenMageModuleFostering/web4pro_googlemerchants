@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_googlemerchants_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>js</type>
+                <name>extjs/ext-tree.js</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>extjs/fix-defer.js</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>extjs/ext-tree-checkbox.js</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>extjs/resources/css/ext-all.css</name>
+                <params/>
+            </action>
+        </reference>
+        <reference name="left">
+            <block name="category.tree" type="googlemerchants/adminhtml_googlecategory_tree"
+                   template="web4pro_googlemerchants/googlecategory/tree.phtml"/>
+        </reference>
+        <reference name="content">
+            <block name="google.category.edit" type="googlemerchants/adminhtml_googlecategory_edit"
+                   template="web4pro_googlemerchants/googlecategory/edit.phtml">
+            </block>
+        </reference>
+    </adminhtml_googlemerchants_index>
+    <adminhtml_googlemerchants_downloadtxt>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>web4pro_googlemerchants/custom.css</name>
+                <params/>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="googlemerchants/adminhtml_upload_form_container">
+                <block type="googlemerchants/adminhtml_upload_file" name="downlaod.form" as="downlaod.form"/>
+            </block>
+        </reference>
+    </adminhtml_googlemerchants_downloadtxt>
+    <adminhtml_googlemerchants_feed>
+        <reference name="left">
+            <block type="adminhtml/system_config_switcher" name="adminhtml.system.config.switcher" before="-"/>
+        </reference>
+        <reference name="content">
+            <block type="googlemerchants/adminhtml_editfeed">
+            </block>
+        </reference>
+    </adminhtml_googlemerchants_feed>
+
+</layout>

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * WEB4PRO - Creating profitable online stores
+ *
+ *
+ * @author    WEB4PRO <achernyshev@web4pro.com.ua>
+ * @category  WEB4PRO
+ * @package   Web4pro_Googlemerchants
+ * @copyright Copyright (c) 2014 WEB4PRO (http://www.web4pro.net)
+ * @license   http://www.web4pro.net/license.txt
+ */
+-->
+<config>
+    <tabs>
+        <web4pro>
+            <label>Web4pro</label>
+            <sort_order>250</sort_order>
+        </web4pro>
+    </tabs>
+    <sections>
+        <googlemerchants_options translate="label" module="googlemerchants">
+            <label>Google merchants options</label>
+            <tab>web4pro</tab>
+            <sort_order>600</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>Options for importing products</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <google_shiping_html translate="label">
+                            <frontend_type>label</frontend_type>
+                            <frontend_type>label</frontend_type>
+                            <frontend_model>googlemerchants/adminhtml_system_instruction</frontend_model>
+                            <source_model>googlemerchants/googleshipping</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </google_shiping_html>
+                        <google_shiping_options translate="label">
+                            <label>Select shipping method</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>googlemerchants/googleshipping</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Please select offline shipping method</comment>
+                        </google_shiping_options>
+                        <google_feedfilename>
+                            <label>Feed file name to store in 'media/productsfeed/'</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </google_feedfilename>
+                        <google_feed_prameters translate="label">
+                            <label>Feed parameters</label>
+                            <frontend_type>label</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>0</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </google_feed_prameters>
+                        <google_feed_export_outofstock translate="label">
+                            <label>Export out of stock products</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </google_feed_export_outofstock>
+                        <google_feed_export_disabled translate="label">
+                            <label>Export disabled products</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </google_feed_export_disabled>
+                        <google_feed_export_unvisible translate="label">
+                            <label>Export products with status `Not Visible Individually`</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </google_feed_export_unvisible>
+                        <google_shiping_html_notes translate="label">
+                            <comment>
+                                <![CDATA[
+
+                                        <ul style="list-style-type: circle;">
+                                           <i>
+                                            <li><p>By default .csv file will be generated once a day (if the cron is properly setted up), but you can generate it manually by clicking on button “Generate feed .csv” (Web4pro -> Manage Google Merchants settings -> Configure Feed settings).</p></li>
+                                            <li><p>Also you should set up your <a href="https://support.google.com/merchants/answer/188486" target="_blank">google merchants account</a> for importing products by automatic uploading.</p></li>
+                                            <li><p>By default your file will be located here: [base url]/var/productsfeed/[feed_file_name].csv.
+                                            For example : http://site-name.com/var/productsfeed/product_feed.csv.</p></li>
+                                            </i>
+                                        </ul>
+                                ]]>
+                            </comment>
+                            <frontend_type>label</frontend_type>
+                            <source_model>googlemerchants/googleshipping</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </google_shiping_html_notes>
+                    </fields>
+                </general>
+            </groups>
+        </googlemerchants_options>
+    </sections>
+</config>

@@ -1,0 +1,166 @@
+<?php
+/* @var $this Web4pro_Googlemerchants_Block_Adminhtml_Googlecategory_Edit */
+?>
+<div class="content-header">
+    <?php echo $this->getHeaderHtml() ?>
+    <p class="form-buttons"><?php echo $this->getButtonsHtml('header') ?></p>
+</div>
+
+<div id="category-edit-container" class="category-content">
+    <?php echo $this->getChildHtml('form') ?>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+
+    function categoryReset(url, useAjax) {
+        if (useAjax) {
+            var params = {active_tab_id: false};
+            updateContent(url, params);
+        } else {
+            location.href = url;
+        }
+    }
+    function saveGCategoryLink() {
+        var googleCatId = tree.currentNodeId;
+        var storeCatId = $('category_to_linking').selectedIndex;
+        var url = '<?php echo $this->getSaveStoreCategoryLinkUrl()?>';
+        var params = {google_category_id: googleCatId, store_category_id: storeCatId};
+        new Ajax.Request(url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ), {
+            parameters: params,
+            onComplete: function (responce) {
+                if (responce.responseJSON.error) {
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    function updateContent(url, params, refreshTree) {
+        if (!params) {
+            params = {};
+        }
+        if (!params.form_key) {
+            params.form_key = FORM_KEY;
+        }
+
+        toolbarToggle.stop();
+
+        /*if(params.node_name)
+         {
+         var currentNode = tree.getNodeById(tree.currentNodeId);
+         currentNode.setText(params.node_name);
+         }*/
+
+        var categoryContainer = $('category-edit-container');
+        var messagesContainer = $('messages');
+        var thisObj = this;
+        new Ajax.Request(url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ), {
+            parameters: params,
+            evalScripts: true,
+            onComplete: function () {
+                /**
+                 * This func depends on variables, that came in response, and were eval'ed in onSuccess() callback.
+                 * Since prototype's Element.update() evals javascripts in 10 msec, we should exec our func after it.
+                 */
+                setTimeout(function () {
+                    try {
+                        if (refreshTree) {
+                            thisObj.refreshTreeArea();
+                        }
+                        toolbarToggle.start();
+                    } catch (e) {
+                        alert(e.message);
+                    }
+                    ;
+                }, 25);
+            },
+            onSuccess: function (transport) {
+                try {
+                    if (transport.responseText.length > 0) {
+                        var respObj = transport.responseText.evalJSON();
+                        if (respObj.store_category_id != null) {
+                            $('category_to_linking').selectedIndex = respObj.store_category_id;
+                        }
+                        else {
+                            $('category_to_linking').selectedIndex = 0;
+                        }
+                        if (respObj.is_root) {
+                            $('category_to_linking_submit').setAttribute('disabled', 'disabled');
+                            $('category_to_linking').setAttribute('disabled', 'disabled');
+                        }
+                        else {
+                            $('category_to_linking_submit').removeAttribute('disabled');
+                            $('category_to_linking').removeAttribute('disabled');
+                        }
+                    }
+                }
+                catch (e) {
+                    $(categoryContainer).update(transport.responseText);
+                }
+            }
+        });
+    }
+
+    /**
+     * Refresh tree nodes after saving or deleting a category
+     */
+
+    //category_to_linking_submit
+    function refreshTreeArea(transport) {
+        if (tree && window.editingCategoryBreadcrumbs) {
+            // category deleted - delete its node
+            if (tree.nodeForDelete) {
+                var node = tree.getNodeById(tree.nodeForDelete);
+                tree.nodeForDelete = false;
+
+                if (node) { // Check maybe tree became somehow not synced with ajax and we're trying to delete unknown node
+                    node.parentNode.removeChild(node);
+                    tree.currentNodeId = false;
+                }
+            }
+            // category created - add its node
+            else if (tree.addNodeTo) {
+                var parent = tree.getNodeById(tree.addNodeTo);
+                tree.addNodeTo = false;
+
+                if (parent) { // Check maybe tree became somehow not synced with ajax and we're trying to add to unknown node
+                    var node = new Ext.tree.AsyncTreeNode(editingCategoryBreadcrumbs[editingCategoryBreadcrumbs.length - 1]);
+                    node.loaded = true;
+                    tree.currentNodeId = node.id;
+                    parent.appendChild(node);
+
+                    if (parent.expanded) {
+                        tree.selectCurrentNode();
+                    } else {
+                        var timer;
+                        parent.expand();
+                        var f = function () {
+                            if (parent.expanded) { // done expanding
+                                clearInterval(timer);
+                                tree.selectCurrentNode();
+                            }
+                        };
+                        timer = setInterval(f, 200);
+                    }
+                }
+            }
+
+            // update all affected categories nodes names
+            for (var i = 0; i < editingCategoryBreadcrumbs.length; i++) {
+                var node = tree.getNodeById(editingCategoryBreadcrumbs[i].id);
+                if (node) {
+                    node.setText(editingCategoryBreadcrumbs[i].text);
+                }
+            }
+        }
+    }
+
+    function displayLoadingMask() {
+        var loaderArea = $$('#html-body .wrapper')[0]; // Blocks all page
+        Position.clone($(loaderArea), $('loading-mask'), {offsetLeft: -2});
+        toggleSelectsUnderBlock($('loading-mask'), false);
+        Element.show('loading-mask');
+    }
+
+    //]]>
+</script>

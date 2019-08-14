@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Web4pro_Googlemerchants>
+            <active>false</active>
+            <codePool>community</codePool>
+        </Web4pro_Googlemerchants>
+    </modules>
+</config>

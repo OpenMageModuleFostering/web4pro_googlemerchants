@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * WEB4PRO - Creating profitable online stores
+ *
+ *
+ * @author    WEB4PRO <achernyshev@web4pro.com.ua>
+ * @category  WEB4PRO
+ * @package   Web4pro_Googlemerchants
+ * @copyright Copyright (c) 2014 WEB4PRO (http://www.web4pro.net)
+ * @license   http://www.web4pro.net/license.txt
+ */
+-->
+<config>
+    <menu>
+        <web4pro_attachments module="googlemerchants">
+            <title>Web4pro</title>
+            <sort_order>71</sort_order>
+            <children>
+                <googlemerchants_settings module="googlemerchants">
+                    <title>Manage Google Merchants settings</title>
+                    <sort_order>0</sort_order>
+                    <children>
+                        <googlecategories module="googlemerchants">
+                            <title>Manage Google Categories</title>
+                            <sort_order>0</sort_order>
+                            <action>adminhtml/googlemerchants/index</action>
+                        </googlecategories>
+                        <googleshipping>
+                            <title>Manage Google Feed settings</title>
+                            <sort_order>1</sort_order>
+                            <action>adminhtml/system_config/edit/section/googlemerchants_options</action>
+                        </googleshipping>
+                        <googlesfeed>
+                            <title>Configure Feed settings</title>
+                            <sort_order>1</sort_order>
+                            <action>adminhtml/googlemerchants/feed</action>
+                        </googlesfeed>
+                    </children>
+                </googlemerchants_settings>
+            </children>
+        </web4pro_attachments>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <web4pro_attachments>
+                        <title>Web4pro</title>
+                        <sort_order>0</sort_order>
+                    </web4pro_attachments>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <googlemerchants_options translate="title">
+                                        <title>Shipping options</title>
+                                        <sort_order>100</sort_order>
+                                    </googlemerchants_options>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

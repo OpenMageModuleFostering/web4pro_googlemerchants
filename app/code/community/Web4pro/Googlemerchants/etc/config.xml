@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * WEB4PRO - Creating profitable online stores
+ *
+ *
+ * @author    WEB4PRO <achernyshev@web4pro.com.ua>
+ * @category  WEB4PRO
+ * @package   Web4pro_Googlemerchants
+ * @copyright Copyright (c) 2014 WEB4PRO (http://www.web4pro.net)
+ * @license   http://www.web4pro.net/license.txt
+ */
+-->
+<config>
+    <modules>
+        <Web4pro_Googlemerchants>
+            <version>0.0.0.1</version>
+        </Web4pro_Googlemerchants>
+    </modules>
+    <global>
+        <resources>
+            <googlemerchants_setup>
+                <setup>
+                    <module>Web4pro_Googlemerchants</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+            </googlemerchants_setup>
+            <googlemerchants_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </googlemerchants_write>
+            <googlemerchants_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </googlemerchants_read>
+        </resources>
+        <models>
+            <googlemerchants>
+                <class>Web4pro_Googlemerchants_Model</class>
+                <resourceModel>googlemerchants_mysql4</resourceModel>
+            </googlemerchants>
+            <googlemerchants_mysql4>
+                <class>Web4pro_Googlemerchants_Model_Mysql4</class>
+                <entities>
+                    <googlemerchants_cats>
+                        <table>googlemerchants_cats</table>
+                    </googlemerchants_cats>
+                </entities>
+            </googlemerchants_mysql4>
+        </models>
+        <helpers>
+            <googlemerchants>
+                <class>Web4pro_Googlemerchants_Helper</class>
+            </googlemerchants>
+        </helpers>
+        <blocks>
+            <googlemerchants>
+                <class>Web4pro_Googlemerchants_Block</class>
+            </googlemerchants>
+        </blocks>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <googlemerchants before="Mage_Adminhtml">Web4pro_Googlemerchants_Adminhtml</googlemerchants>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <googlemerchants>
+                    <file>googlemerchants.xml</file>
+                </googlemerchants>
+            </updates>
+        </layout>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <web4pro_googlemerchants>
+                <schedule>
+                    <cron_expr>0 1 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>googlemerchants/googlefeed::generateFeed</model>
+                </run>
+            </web4pro_googlemerchants>
+        </jobs>
+    </crontab>
+    <default>
+        <googlemerchants_options>
+            <general>
+                <google_feedfilename>product_feed</google_feedfilename>
+            </general>
+        </googlemerchants_options>
+    </default>
+</config>
