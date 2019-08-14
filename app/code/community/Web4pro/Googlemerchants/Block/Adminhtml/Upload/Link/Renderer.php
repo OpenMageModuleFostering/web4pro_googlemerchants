@@ -20,6 +20,9 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Upload_Link_Renderer extends Varie
         return '';
     }
 
+    /**
+     * @return string
+     */
     public function getLabelHtml()
     {
         $html = '<div>

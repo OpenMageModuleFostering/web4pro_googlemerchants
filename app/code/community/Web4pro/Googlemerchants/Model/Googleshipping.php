@@ -59,9 +59,10 @@ class Web4pro_Googlemerchants_Model_Googleshipping
     }
 
     /**
+     * method for calculating shipping cost
      * @param $product
      * @return string
-     * method for calculating shipping cost
+     *
      */
     public function getShippingCost($product)
     {

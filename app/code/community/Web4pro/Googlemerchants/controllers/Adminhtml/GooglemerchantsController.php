@@ -34,6 +34,10 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
     {
         $googleCategoriesCount = Mage::getModel('googlemerchants/googlecategory')->getCollection()->count();
         if ($googleCategoriesCount == 0) {
+            if(ini_get('safe_mode'))
+            {
+                Mage::getSingleton('adminhtml/session')->addWarning('Please note, that PHP is running in safe mode. For correct import please increase the parameter "max_execution_time" in the php.ini file.');
+            }
             $this->_redirect('adminhtml/googlemerchants/downloadtxt');
         }
         $this->_initAction();
@@ -59,7 +63,7 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
      */
     public function savetxtAction()
     {
-
+        set_time_limit (10000);
         if (isset($_FILES['fileinputname']['name']) && $_FILES['fileinputname']['name'] != '') {
             try {
                 $uploader = new Varien_File_Uploader('fileinputname');
@@ -204,27 +208,30 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
         $result = array();
         try {
             $post = $this->getRequest()->getPost();
-            $index = 0;
-            $storeCode = 'default';
-
+            $storeCode = Mage::helper('googlemerchants')->getStoreCodeFromPost();
+            $storeCode = empty($storeCode) ? Mage::helper('googlemerchants')->getDefaultFrontendStoreView() : $storeCode;
             $valuesToSave = array();
             $names = $post['feed-col-name'];
             $values = $post['attribute-select'];
             foreach ($names as $key => $value) {
                 $valuesToSave [$value] = $values[$key];
             }
-            Mage::getModel('googlemerchants/googlefeed')->setFeedConfig($valuesToSave, $this->getRequest()->getParam('store'));
+            Mage::getModel('googlemerchants/googlefeed')->setFeedConfig($valuesToSave, $storeCode);
             $result['error'] = false;
         } catch (Exception $e) {
-            $result['error'] = false;
+            $result['error'] = true;
             $result['message'] = $e->getMessage();
             Mage::getSingleton('core/session')->addError($e->getMessage());
-
         }
+
         if ($this->getRequest()->isAjax()) {
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         } else {
             $this->_redirect('adminhtml/googlemerchants/feed');
+            if(!$result['error'])
+            {
+                Mage::getSingleton('core/session')->addSuccess('Feed configuration has been saved.');
+            }
         }
     }
 

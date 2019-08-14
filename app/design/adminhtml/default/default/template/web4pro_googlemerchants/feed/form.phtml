@@ -4,20 +4,30 @@
 <div id="edit_form_wrap" class="entity-edit">
     <div class="entry-edit">
         <div class="entry-edit-head">
-            <h4><?php echo $this->__('Manage google feed') ?></h4>
+            <h4><?php echo $this->__('Manage google feed')?></h4>
         </div>
     </div>
     <form id="edit_form" method="post" action="<?php echo $this->getSaveUrl() ?>">
-        <input name="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>"/>
+        <input name="form_key" type="hidden" value="<?php echo $this->getFormKey()?>" />
 
         <div class="box">
             <div class="hor-scroll">
+              <?php /*  <div>
+                    <?php $availableStores = $this->getAvailableStores();?>
+                    <label for="select_store_name"><?php echo $this->__('Please choose the store view for generating feed:'); ?></label>
+                    <select name="select_store_name">
+                        <?php foreach($availableStores as $store):?>
+                            <option value="<?php echo $store['value']?>"><?php echo $store['label']?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+              */ ?>
                 <table cellspacing="0" cellpadding="0" class="dynamic-grid" style="width:70%;" align="center">
                     <thead>
                     <tr class="headings">
-                        <th style="width:160px;"><?php echo $this->__('Field Name') ?></th>
-                        <th width="40%"><?php echo $this->__('Value') ?></th>
-                        <th style="width:40%;"><?php echo $this->__('Action') ?></th>
+                        <th style="width:160px;"><?php echo $this->__('Field Name')?></th>
+                        <th width="40%"><?php echo $this->__('Value')?></th>
+                        <th style="width:40%;"><?php echo $this->__('Action')?></th>
                     </tr>
                     </thead>
                     <tbody id="mapping-table-body">
@@ -36,33 +46,31 @@
         var lastIndex = getLastIndex();
 
         function removeRow(index) {
-            var elementForDelete = $('table-row-' + index);
-            if (elementForDelete != null) {
-                elementForDelete.remove();
-            }
+            var currentRow = $('table-row-' + index);
+            currentRow.remove();
+            lastIndex = getLastIndex();
         }
-        function addRow() {
+
+        function addRow()
+        {
             var indexTAppend = lastIndex + 1;
             var rowHtml = '<tr id="table-row-' + indexTAppend + '"><td><input name="feed-col-name[' + indexTAppend + ']"/></td>';
             rowHtml += '<td><select name="attribute-select[' + indexTAppend + ']">';
             rowHtml += '<?php echo $this->getOptionsHtml()?>';
             rowHtml += '</select></td>';
-            rowHtml += '<td><button onclick="removeRow(' + indexTAppend + ');return false;">Remove</button></td>';
+            rowHtml += '<td><button type="button" onclick="removeRow(' + indexTAppend + ');" class="delete delete-option">Remove</button></td>';
             var lastRowId = "table-row-" + lastIndex;
             var elementToAppend = $(lastRowId);
-            if (elementToAppend != null) {
-                $(lastRowId).insert({after: rowHtml});
+            if(elementToAppend != null)
+            {
+                $(lastRowId).insert({after:rowHtml});
                 lastIndex++;
             }
         }
-        function getLastIndex() {
-            var trs = $('mapping-table-body').getElementsByTagName("tr");
-            var lastEl = trs[trs.length - 1];
-            var lastElId = lastEl.id;
-            var laseFreeNum = lastElId.replace('table-row-', '');
-            return parseInt(laseFreeNum);
+        function getLastIndex()
+        {
+            return $('mapping-table-body').getElementsByTagName("tr").length - 1;
         }
 
     </script>
-</div>
 </div>

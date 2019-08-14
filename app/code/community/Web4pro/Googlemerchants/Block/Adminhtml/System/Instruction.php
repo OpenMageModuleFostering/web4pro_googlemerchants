@@ -2,21 +2,7 @@
 
 class Web4pro_Googlemerchants_Block_Adminhtml_System_Instruction extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
-    /*protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
-    {
-        $block = $this->getLayout()->createBlock('adminhtml/widget_button');
-        $block->setLabel($this->__('Fetch New Token'));
-        $block->setData('onclick','return getEbaySession();');
-        $html = '<div>'.$block->toHtml().'</div>';
-        $html.= '<script type=text/javascript>
-                      function getEbaySession(){
-                         setLocation("'.$this->helper('adminhtml')->getUrl('web4pro_ebay_admin/adminhtml_system/session').'");
-                         return false;
-            }</script>';
-        $element->setAfterElementHtml($html);
 
-        return parent::_getElementHtml($element);
-    }*/
     public function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         $html = '

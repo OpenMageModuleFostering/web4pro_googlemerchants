@@ -17,6 +17,7 @@ class Web4pro_Googlemerchants_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected $_defaultStoreId = NULL;
 
+    const CONFIG_DEFAULT_FRONTEND_STORE_CODE = 'googlemerchants_options/general/google_selected_store_for_feed';
     /**
      * @param Web4pro_Googlemerchants_Model_Googlecategory $entity
      * @return array
@@ -115,6 +116,11 @@ class Web4pro_Googlemerchants_Helper_Data extends Mage_Core_Helper_Abstract
         return '';
     }
 
+    /**
+     * returns children product ids for grouped configurable and bundle products
+     * @param $product
+     * @return array
+     */
     public function getParentIds($product)
     {
         $parentIds = array();
@@ -127,6 +133,10 @@ class Web4pro_Googlemerchants_Helper_Data extends Mage_Core_Helper_Abstract
         return $parentIds;
     }
 
+    /**
+     * @param $product
+     * @return mixed
+     */
     public function getProductUrl($product)
     {
         $productVisibility = $product->getVisibility();
@@ -140,6 +150,10 @@ class Web4pro_Googlemerchants_Helper_Data extends Mage_Core_Helper_Abstract
         return $urlKey;
     }
 
+    /**
+     * @param $product
+     * @return mixed|string
+     */
     public function getMinPrice($product)
     {
         $productType = $product->getTypeID();
@@ -192,4 +206,36 @@ class Web4pro_Googlemerchants_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return $priseStr;
     }
+
+    public function getStoresAssocArray()
+    {
+        $availableStores = array();
+        foreach (Mage::app()->getWebsites() as $website) {
+            foreach ($website->getGroups() as $group) {
+                $stores = $group->getStores();
+                foreach ($stores as $store) {
+                    $availableStores[] = array('value' => $store->getId(), 'label' => $store->getName());
+                }
+            }
+        }
+        return $availableStores;
+    }
+
+    public function getDefaultFrontendStoreView()
+    {
+        $storeInConfig = Mage::getStoreConfig(self::CONFIG_DEFAULT_FRONTEND_STORE_CODE);
+        $defaultStore = Mage::getModel("core/store")->load(Mage_Core_Model_Store::DEFAULT_CODE);
+        $retValue = (empty($storeInConfig) ? $storeInConfig : $defaultStore);
+        return $retValue;
+    }
+
+    public function getStoreCodeFromPost()
+    {
+        $postParam = Mage::app()->getRequest()->getParam('store');
+        if(empty($postParam)){
+            $postParam = Mage_Core_Model_Store::DEFAULT_CODE;
+        }
+        return $postParam;
+    }
+
 }

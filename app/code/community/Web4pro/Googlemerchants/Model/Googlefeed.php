@@ -12,7 +12,9 @@
  */
 class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
 {
-    protected $_attributesArray = NULL, $_productCollection = NULL, $_path = 'googlemerchants_options/general/google_feed_prameters', $_notAttachedCategoriesExists = false, $_attributesCollection,
+    protected $_attributesArray = NULL, $_productCollection = NULL, $_helper = NULL, $_byCron = false,
+        $_path = 'googlemerchants_options/general/google_feed_prameters',
+        $_notAttachedCategoriesExists = false, $_attributesCollection,
         $_defaultParameters = array(
         array('value' => 'id', 'selected' => 'product_id'),
         array('value' => 'title', 'selected' => 'name'),
@@ -27,7 +29,16 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
         array('value' => 'category', 'selected' => 'google_category'),
         array('value' => 'tax', 'selected' => 'google_tax'),
         array('value' => 'link', 'selected' => 'google_product_link'),
-        array('value' => 'availability', 'selected' => 'google_availability'));
+        array('value' => 'availability', 'selected' => 'google_availability')),
+
+        $_defaultOptionValues = array(
+                                    array('code' => 'product_id', 'label' => 'Product ID'),
+                                    array('code' => 'google_category', 'label' => 'Google Category'),
+                                    array('code' => 'shipping_cost', 'label' => 'Shipping Cost'),
+                                    array('code' => 'parent_name', 'label' => 'Parent Name'),
+                                    array('code' => 'google_tax', 'label' => 'Tax'),
+                                    array('code' => 'google_product_link', 'label' => 'Product URL'),
+                                    array('code' => 'google_availability', 'label' => 'Availability (in/out of stock)'));
 
     const PATH_TO_GENERATE = 'var/productsfeed';
 
@@ -35,7 +46,9 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
     {
         parent::_construct();
         $this->_init('googlemerchants/googlefeed');
+        $this->_helper = Mage::helper('googlemerchants');
         $this->_setProductsCollection();
+        $this->_appendStoreFilter();
     }
 
     /**
@@ -45,6 +58,7 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
     {
         if ($this->_productCollection === NULL) {
             $collection = Mage::getResourceModel('catalog/product_collection')->addAttributeToFilter('visibility', array('in' => array(1, 2, 3, 4)))->addAttributeToSelect('*');
+            //$collection->setStoreId();
             $this->_productCollection = $collection;
         }
         $this->_setCollectionConfigConditions();
@@ -84,7 +98,6 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
         $googleCategoriesModel = Mage::getModel('googlemerchants/googlecategory');
         $googleShippingModel = Mage::getModel('googlemerchants/googleshipping');
         $stockModel = Mage::getModel('cataloginventory/stock_item');
-        $helper = Mage::helper('googlemerchants');
         $headerRow = $this->_getHeaderRow();
         $fileNameInConfig = Mage::getStoreConfig('googlemerchants_options/general/google_feedfilename');
         if (empty($fileNameInConfig)) {
@@ -93,7 +106,7 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
         $fileName = $pathToSave . '/' . $fileNameInConfig . '.csv';
         $file = fopen($fileName, "w");
         fputcsv($file, $headerRow);
-        $storeCode = Mage::helper('googlemerchants')->getSelectedStore();
+        $storeCode = $this->_helper->getSelectedStore();
         foreach ($this->_productCollection as $product) {
             $productArray = array();
             foreach ($attributes as $attribute) {
@@ -131,19 +144,19 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
                         }
                         break;
                     case 'parent_name' :
-                        $productArray [] = Mage::helper('googlemerchants')->getParentName($product);
+                        $productArray [] = $this->_helper->getParentName($product);
                         break;
                     case 'google_tax' :
                         $productArray [] = Mage::getModel('googlemerchants/googletax')->getTaxValue($product);
                         break;
                     case 'google_product_link':
-                        $productArray [] = Mage::helper('googlemerchants')->getProductUrl($product);
+                        $productArray [] = $this->_helper->getProductUrl($product);
                         break;
                     case 'none':
                         $productArray [] = '';
                         break;
                     case 'price':
-                        $productArray [] = $helper->getMinPrice($product);
+                        $productArray [] = $this->_helper->getMinPrice($product);
                         break;
                     case 'google_availability':
 
@@ -201,15 +214,15 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
      */
     public function getFeedConfig()
     {
-        $feedConfig = Mage::getStoreConfig('googlemerchants_options/general/google_feed_prameters', Mage::helper('googlemerchants')->getSelectedStore());
+        $selectionStore = $this->_helper->getSelectedStore();
+        $feedConfig = Mage::getStoreConfig('googlemerchants_options/general/google_feed_prameters', $selectionStore);
+        $feedConfig = unserialize($feedConfig);
         if (empty($feedConfig)) {
             return $this->_defaultParameters;
         }
-        $unserializedConfig = unserialize($feedConfig);
-        if (empty($unserializedConfig)) {
+        if (empty($feedConfig)) {
             return $this->_defaultParameters;
         }
-        $feedConfig = unserialize($feedConfig);
         $resArr = array();
         foreach ($feedConfig as $key => $field) {
             $resArr [] = array('value' => $key, 'selected' => $field);
@@ -223,18 +236,14 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
      * @return $this
      * @throws Exception
      */
-    public function setFeedConfig($value, $storeCode = '')
+    public function setFeedConfig($value, $storeCode)
     {
-
-        $config = Mage::getModel('core/config_data');
-        $config->setValue(serialize($value));
+        $config = Mage::getModel('adminhtml/system_config_backend_serialized_array');
+        $config->setValue($value);
         $config->setPath($this->_path);
         $config->setScope('stores');
-        $storeCode = Mage::helper('googlemerchants')->getSelectedStore();
-        if (empty($storeCode)) {
-            $storeCode = Mage::app()->getStore()->getCode();
-        }
-        $config->setScopeId(Mage::app()->getStore($storeCode)->getId());
+        $storeId = Mage::app()->getStore($storeCode)->getId();
+        $config->setScopeId($storeId);
         $config->save();
         Mage::getConfig()->reinit();
         return $this;
@@ -267,14 +276,8 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
     public function getAttributesOptions()
     {
         $collection = $this->_getAttributesCollection();
-        $options = array();
-        $options [] = array('code' => 'product_id', 'label' => 'Product ID');
-        $options [] = array('code' => 'google_category', 'label' => 'Google Category');
-        $options [] = array('code' => 'shipping_cost', 'label' => 'Shipping Cost');
-        $options [] = array('code' => 'parent_name', 'label' => 'Parent Name');
-        $options [] = array('code' => 'google_tax', 'label' => 'Tax');
-        $options [] = array('code' => 'google_product_link', 'label' => 'Product URL');
-        $options [] = array('code' => 'google_availability', 'label' => 'Availability (in/out of stock)');
+
+        $options = $this->_defaultOptionValues;
 
         foreach ($collection as $item) {
             $frontendLabel = $item->getFrontendLabel();
@@ -284,6 +287,12 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
         }
         $this->_attributeSelectOptions = $options;
         return $this->_attributeSelectOptions;
+    }
+
+    public function generateFeedByCron()
+    {
+        $this->_byCron = true;
+        $this->generateFeed();
     }
 
     /**
@@ -297,4 +306,19 @@ class Web4pro_Googlemerchants_Model_Googlefeed extends Mage_Core_Model_Abstract
                 ->setEntityTypeFilter(Mage::getResourceModel('catalog/product')->getTypeId());
         return $this->_attributesCollection;
     }
+
+    protected function _appendStoreFilter()
+    {
+        if($this->_byCron){
+            $selectedStore = $this->_helper->getDefaultFrontendStoreView();
+        }
+        else{
+            $storeCode = $this->_helper->getStoreCodeFromPost();
+            $selectedStore = Mage::getModel("core/store")->load($storeCode);
+        }
+        $this->_productCollection->setStore($selectedStore->getId());
+        $this->_productCollection->setPageSize(20)
+            ->setCurPage(1);
+    }
+
 }

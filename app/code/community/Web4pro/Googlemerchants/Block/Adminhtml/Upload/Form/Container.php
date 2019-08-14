@@ -15,7 +15,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Upload_Form_Container extends Mage
     protected $_headerText = 'Upload file with google categories';
 
     /**
-     * @return $this
+     * @return Web4pro_Googlemerchants_Block_Adminhtml_Upload_Form_Container
      */
     protected function _prepareLayout()
     {

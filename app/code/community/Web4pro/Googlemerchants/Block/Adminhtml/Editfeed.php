@@ -14,18 +14,15 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed extends Mage_Adminhtml_Bl
 {
     protected $_headerText = 'Manage feed settings';
 
+    /**
+     * class constructor
+     */
     public function __construct()
     {
         parent::__construct();
         $this->_objectId = 'id';
         $this->_blockGroup = 'googlemerchants';
         $this->_controller = 'adminhtml_editfeed';
-        $this->_addButton('save', array(
-            'label' => Mage::helper('adminhtml')->__('Save'),
-            'onclick' => 'editForm.submit();',
-            'class' => 'save',
-        ), 1);
-
         $this->_addButton('generate_feed', array(
             'label' => Mage::helper('adminhtml')->__('Generate feed .csv'),
             'class' => 'save',
@@ -37,6 +34,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed extends Mage_Adminhtml_Bl
 
 
     /**
+     *
      * @return mixed
      */
     public function getSaveUrl()
@@ -49,7 +47,6 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed extends Mage_Adminhtml_Bl
      */
     public function getValidationUrl()
     {
-        //return false;
         return $this->getSaveUrl();
     }
 
@@ -58,7 +55,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed extends Mage_Adminhtml_Bl
      */
     public function getGenerateFeedUrl()
     {
-        return Mage::helper("adminhtml")->getUrl('adminhtml/googlemerchants/generatefeed');
+        return Mage::helper("adminhtml")->getUrl('adminhtml/googlemerchants/generatefeed', array('store' => Mage::helper('googlemerchants')->getStoreCodeFromPost()));
     }
 
     /**
@@ -68,4 +65,6 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed extends Mage_Adminhtml_Bl
     {
         return Mage::helper("adminhtml")->getUrl('adminhtml/googlemerchants/resetfeed');
     }
+
+
 }

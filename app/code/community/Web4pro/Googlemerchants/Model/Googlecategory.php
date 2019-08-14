@@ -125,6 +125,10 @@ class Web4pro_Googlemerchants_Model_Googlecategory extends Mage_Core_Model_Abstr
         }
     }
 
+    /**
+     * @param $parentCategory
+     * @return array
+     */
     public function getChildrenCategories($parentCategory)
     {
         $children = array();
@@ -138,6 +142,10 @@ class Web4pro_Googlemerchants_Model_Googlecategory extends Mage_Core_Model_Abstr
         return $children;
     }
 
+    /**
+     * @param $storeCatIds
+     * @return string
+     */
     public function getCategoriesStr($storeCatIds)
     {
         $categoriesStr = '';
@@ -159,6 +167,10 @@ class Web4pro_Googlemerchants_Model_Googlecategory extends Mage_Core_Model_Abstr
         return implode('>', $categoriesArr);
     }
 
+    /**
+     * @param $categoryId
+     * @return bool
+     */
     public function isRootCategory($categoryId)
     {
         $category = $this->load($categoryId);

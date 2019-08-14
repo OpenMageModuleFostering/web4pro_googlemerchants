@@ -22,7 +22,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
     {
         $form = new Varien_Data_Form(array(
                 'id' => 'edit_form',
-                'action' => $this->getUrl('adminhtml/googlemerchants/savefeed', array('store' => Mage::app()->getRequest()->getParam('store'), 'isAjax' => true)),
+                'action' => $this->getUrl('adminhtml/googlemerchants/savefeed', array('store' => Mage::helper('googlemerchants')->getStoreCodeFromPost(), 'isAjax' => true)),
                 'method' => 'post',
             )
         );
@@ -33,6 +33,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
     }
 
     /**
+     * render select html fields for feed configuration
      * @param int $nameIndex
      * @param string $selectedVal
      * @return string
@@ -40,13 +41,14 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
 
     public function getSelectHtml($nameIndex = 0, $selectedVal = '')
     {
-        $retStr = '<select name="attribute-select[' . $nameIndex . ']">';
+        $retStr = '<select class="required-entry select" name="attribute-select[' . $nameIndex . ']">';
         $retStr .= $this->getOptionsHtml($selectedVal);
         $retStr .= '</select>';
         return $retStr;
     }
 
     /**
+     * render options html fields for select fields
      * @param string $selectedVal
      * @return string
      */
@@ -54,7 +56,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
     public function getOptionsHtml($selectedVal = '')
     {
         $options = Mage::getModel('googlemerchants/googlefeed')->getAttributesOptions();
-        $retStr = '<option value="none"></option>';
+        $retStr = '<option value=""></option>';
         foreach ($options as $option) {
             if ($option['code'] == $selectedVal) {
                 $retStr .= '<option value="' . addslashes($option['code']) . '" selected>' . addslashes($option['label']) . '</option>';
@@ -66,6 +68,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
     }
 
     /**
+     * rendering the table body for feed table
      * @return string
      */
 
@@ -79,13 +82,12 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
                 continue;
             }
             $resStr .= '<tr id="table-row-' . $index . '">';
-            $resStr .= '<td><input name="feed-col-name[' . $index . ']" value="' . $val['value'] . '"/></td>';
+            $resStr .= '<td><input class="required-entry" name="feed-col-name[' . $index . ']" value="' . $val['value'] . '"/></td>';
             $resStr .= '<td>' . $this->getSelectHtml($index, $val['selected']) . '</td>';
             $resStr .= '<td>' . $this->getRemoveRowButtonHtml($index) . '</td>';
             $resStr .= '</tr>';
             $index++;
         }
-
         return $resStr;
     }
 
@@ -96,7 +98,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
 
     protected function getRemoveRowButtonHtml($nameIndex = 0)
     {
-        return '<button onclick="removeRow(' . $nameIndex . ')">Remove</button>';
+        return '<button onclick="removeRow(' . $nameIndex . '); " class="delete delete-option">Remove</button>';
     }
 
     /**
@@ -124,4 +126,8 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
         return Mage::helper("adminhtml")->getUrl('adminhtml/googlemerchants/feedajax');
     }
 
+    public function getAvailableStores()
+    {
+        return Mage::helper('googlemerchants')->getStoresAssocArray();
+    }
 }
