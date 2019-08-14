@@ -14,7 +14,7 @@
 <config>
     <modules>
         <Web4pro_Googlemerchants>
-            <version>1.0.2.0</version>
+            <version>1.0.1.0</version>
         </Web4pro_Googlemerchants>
     </modules>
     <global>

@@ -11,17 +11,17 @@ class Web4pro_Googlemerchants_Block_Adminhtml_System_Instruction extends Mage_Ad
                                 <ul style="list-style-type: decimal;">
                                     <li>See <a href="https://support.google.com/merchants/answer/188494" target="_blank"> the documentation </a> for google feed.</li>
                                     <li>Set up necessary product attributes on “Google attributes” tab:
-                                    <img src="https://docs.google.com/drawings/d/1BdC5Fj0IgBs0evVO4m_32glUadIIVHAy-em6oeFGpJA/pub?w=960&h=720" alt="Set up google attributes" width="650" height="400">
+                                    <img src="https://docs.google.com/drawings/d/1wT2aLTTGgnFqM9MBWWt5pLxnOKdo04busgBsAfFrZQY/pub?w=1500&h=500" alt="Set up google attributes" width="1000" height="400">
                                     </li>
                                     <li>Go to <a href="' . $this->_getGoogleCategoriesUrl() . '" target="_blank">Web4pro → Manage Google Merchants settings → Manage Google Categories </a> and follow the instructions.</li>
                                     <li>Attach all categories in your store to Google categories. Just click on google category, select store category and click “Save”:
-                                        <img src="https://docs.google.com/drawings/d/1Y2IYm9WfmFMCU9YRbbrKPdPspinBE1paJoW8nE4n0X8/pub?w=640&h=413" alt="Upload filewith categories">
+                                        <img src="https://docs.google.com/drawings/d/1YNodg8_uzi5r7W7RrLd0BOqW6R1osxUHBHnoq0586OE/pub?w=1500&h=420" alt="Upload filewith categories"  width="1000" height="350" />
                                     </li>
                                     <li><p>And the last step is setting up feed. You need to choose necessary attributes, which you would like to import.</p>
                                         <p>Go to <a href="' . $this->_getFeedSettingsUrl() . '">Web4pro → Manage Google Merchants settings → Configure Feed settings </a>:
                                             and setup all necessary attributes according to <a href="https://support.google.com/merchants/answer/188494" target="_blank">feed specification</a>:</p>
                                             <p><b>Please Note:</b> some fields in google feen need the postfix or the prefix to be setted.</p>
-                                            <img src="https://docs.google.com/drawings/d/1ZDkUUOBwtkLoFHrifmgSgzM87wln1qNlAuwJ6M5vzJw/pub?w=854&h=615" alt="Set up feed settings" width="650">
+                                            <img src="https://docs.google.com/drawings/d/14kSCy08SqXq1kHVAuioSmsKWPeMlhpOOQIamyxZEE-A/pub?w=1500&h=500" alt="Set up feed settings" width="1000" height="350">
                                         </li>
 
                                     <li>Set up necessary settings of importing products  (Web4pro → Manage Google Merchants settings → Manage Google Merchants settings -> Manage Google Feed settings) ↓ :
