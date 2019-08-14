@@ -22,16 +22,18 @@
                     </select>
                 </div>
               */ ?>
-                <table cellspacing="0" cellpadding="0" class="dynamic-grid" style="width:70%;" align="center">
+                <table cellspacing="0" cellpadding="0" class="dynamic-grid" style="width:100%;" align="center">
                     <thead>
                     <tr class="headings">
                         <th style="width:160px;"><?php echo $this->__('Field Name')?></th>
-                        <th width="40%"><?php echo $this->__('Value')?></th>
+                        <th width="40%"><?php echo $this->__('Prefix')?></th>
+                        <th width="40%"><?php echo $this->__('Value for Google Feed')?></th>
+                        <th width="40%"><?php echo $this->__('Postfix')?></th>
                         <th style="width:40%;"><?php echo $this->__('Action')?></th>
                     </tr>
                     </thead>
                     <tbody id="mapping-table-body">
-                    <?php echo $this->getTableBodyHtml() ?>
+                        <?php echo $this->getTableBodyHtml() ?>
                     </tbody>
                 </table>
                 </br>
@@ -47,17 +49,29 @@
 
         function removeRow(index) {
             var currentRow = $('table-row-' + index);
-            currentRow.remove();
+            var currentSelects = $$('#table-row-' + index + ' .required-entry');
+            for(i = 0; i < currentSelects.length; i ++){
+                currentSelects[i].setAttribute('disabled', 'disabled');
+            }
+
+            var currentPrefixInputs = $$('#table-row-' + index + ' .prefix-postfix-input-field');
+            for(i = 0; i < currentPrefixInputs.length; i ++){
+                currentPrefixInputs[i].setAttribute('disabled', 'disabled');
+            }
+
+            currentRow.hide();
             lastIndex = getLastIndex();
         }
 
         function addRow()
         {
             var indexTAppend = lastIndex + 1;
-            var rowHtml = '<tr id="table-row-' + indexTAppend + '"><td><input name="feed-col-name[' + indexTAppend + ']"/></td>';
-            rowHtml += '<td><select name="attribute-select[' + indexTAppend + ']">';
+            var rowHtml = '<tr id="table-row-' + indexTAppend + '" class="table-row-googlefeed"><td><input name="feed-col-name[' + indexTAppend + ']" class="required-entry"/></td>';
+            rowHtml += '<td><input name="feed-pref-name[' + indexTAppend + ']" class="prefix-postfix-input-field"/></td>';
+            rowHtml += '<td><select name="attribute-select[' + indexTAppend + ']" class="required-entry select select-googlefeed">';
             rowHtml += '<?php echo $this->getOptionsHtml()?>';
             rowHtml += '</select></td>';
+            rowHtml += '<td><input name="feed-postf-name[' + indexTAppend + ']" class="prefix-postfix-input-field"/></td>';
             rowHtml += '<td><button type="button" onclick="removeRow(' + indexTAppend + ');" class="delete delete-option">Remove</button></td>';
             var lastRowId = "table-row-" + lastIndex;
             var elementToAppend = $(lastRowId);

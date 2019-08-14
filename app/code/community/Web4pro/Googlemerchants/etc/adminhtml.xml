@@ -13,7 +13,7 @@
 -->
 <config>
     <menu>
-        <web4pro_attachments module="googlemerchants">
+        <web4pro_attachments>
             <title>Web4pro</title>
             <sort_order>71</sort_order>
             <children>
@@ -27,7 +27,7 @@
                             <action>adminhtml/googlemerchants/index</action>
                         </googlecategories>
                         <googleshipping>
-                            <title>Manage Google Feed settings</title>
+                            <title>Google merchant options</title>
                             <sort_order>1</sort_order>
                             <action>adminhtml/system_config/edit/section/googlemerchants_options</action>
                         </googleshipping>

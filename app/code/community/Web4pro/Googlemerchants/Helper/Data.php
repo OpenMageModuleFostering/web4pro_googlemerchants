@@ -238,4 +238,11 @@ class Web4pro_Googlemerchants_Helper_Data extends Mage_Core_Helper_Abstract
         return $postParam;
     }
 
+    public function getCurrentStoreId()
+    {
+        $storeId = Mage::app()->getRequest()->getParam('store');
+        return $storeId;
+    }
+
+
 }

@@ -40,6 +40,7 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
             }
             $this->_redirect('adminhtml/googlemerchants/downloadtxt');
         }
+        Mage::getSingleton('core/session')->addNotice('Please append all store categories to google categories.');
         $this->_initAction();
         $this->renderLayout();
 
@@ -136,11 +137,12 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
                     $googleCategory = $model->load($post['google_category_id']);
                     $googleCategoryName = $googleCategory->getTitle();
                     $googleCategory->setStoreCatId($post['store_category_id']);
+
                     $storeCategory = Mage::getModel('catalog/category')->load($post['store_category_id']);
                     $storeCategoryName = $storeCategory->getName();
                     $googleCategory->save();
-                    $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array('error' => 'false')));
-                    Mage::getSingleton('core/session')->addSuccess('Google category "' . $googleCategoryName . '" has been attached to store category "' . $storeCategoryName . '."');
+                    $messageBlockHtml = $this->getLayout()->createBlock('core/messages')->addSuccess('Google category "' . $googleCategoryName . '" has been attached to store category "' . $storeCategoryName . '."')->toHtml();
+                    $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array('error' => 'false', 'message_block_html' => '<div class="ajax-msg">'.$messageBlockHtml.'</div>')));
                 }
             }
         } else {
@@ -171,6 +173,7 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
                     $responce['store_category_id'] = $storeCatId;
                     $responce['is_root'] = false;
                 }
+
             }
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($responce));
         } else {
@@ -213,8 +216,10 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
             $valuesToSave = array();
             $names = $post['feed-col-name'];
             $values = $post['attribute-select'];
+            $prefixes = $post['feed-pref-name'];
+            $postfixes = $post['feed-postf-name'];
             foreach ($names as $key => $value) {
-                $valuesToSave [$value] = $values[$key];
+                $valuesToSave [$value] = array('value' => $values[$key], 'pref' => $prefixes[$key], 'postf' => $postfixes[$key]);
             }
             Mage::getModel('googlemerchants/googlefeed')->setFeedConfig($valuesToSave, $storeCode);
             $result['error'] = false;
@@ -227,7 +232,7 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
         if ($this->getRequest()->isAjax()) {
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         } else {
-            $this->_redirect('adminhtml/googlemerchants/feed');
+            $this->_redirect('adminhtml/googlemerchants/feed/store/'.$storeCode);
             if(!$result['error'])
             {
                 Mage::getSingleton('core/session')->addSuccess('Feed configuration has been saved.');
@@ -273,6 +278,8 @@ class Web4pro_Googlemerchants_Adminhtml_GooglemerchantsController extends Mage_A
 
     public function clearGoogleCategoriesAction()
     {
+        Mage::getSingleton('adminhtml/session')->setLatestSelectedGoogleCategoryId(NULL);
+        Mage::getSingleton('adminhtml/session')->setLatestSelectedStoreCategoryId(NULL);
         Mage::getModel('googlemerchants/googlecategory')->truncateCategoriesTable();
         $this->_redirect('adminhtml/googlemerchants/downloadtxt');
     }

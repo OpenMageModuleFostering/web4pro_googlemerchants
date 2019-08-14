@@ -28,8 +28,8 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Googlecategory_Edit_Form extends M
         $form->setUseAjax(true);
         $form->setUseContainer(true);
         $this->setForm($form);
-        $fieldset = $form->addFieldset('googlemerchants_form', array('legend' => Mage::helper('googlemerchants')->__('Related store category')));
 
+        $fieldset = $form->addFieldset('googlemerchants_form', array('legend' => Mage::helper('googlemerchants')->__('Related store category')));
         $fieldset->addField('category_to_linking', 'select', array(
             'label' => Mage::helper('googlemerchants')->__('Select store category'),
             'required' => false,
@@ -38,11 +38,8 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Googlecategory_Edit_Form extends M
             'disabled' => true,
         ));
 
-        $fieldset->addField('category_to_linking_submit', 'button', array(
-            'required' => true,
-            'value' => 'Save',
-            'onclick' => 'saveGCategoryLink()',
-            'disabled' => true,
+        $fieldset->addField('category_to_linking_submit', 'label', array(
+            'after_element_html' => "<button  id=\"category_to_linking_submit\" disabled type=\"button\" class=\"scalable save\" onclick=\"saveGCategoryLink(); return false;\" type=\"button\"  title=\"Save\">Save</button>",
         ));
         return parent::_prepareForm();
     }
@@ -52,9 +49,11 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Googlecategory_Edit_Form extends M
      */
     protected function _getStoreCategoriesOptions()
     {
-        $rootCatIds = Mage::helper('googlemerchants')->getRootCategoriesIds();
+        $helper = Mage::helper('googlemerchants');
+        $rootCatIds = $helper->getRootCategoriesIds();
         $categoriesCollection = Mage::getSingleton('catalog/category')->getCollection()
             ->addAttributeToSelect('*')
+            ->setOrder('name','ASC')
             ->addIsActiveFilter();
         $retArray = array();
         $retArray[0] = '';
@@ -64,7 +63,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Googlecategory_Edit_Form extends M
             if (in_array($catId, $rootCatIds)) {
                 continue;
             }
-            $retArray[$catId] = $catName;
+            $retArray[$catId] = $catName." (".$helper->__("Category")." ID: ".$catId.")";
         }
         return $retArray;
     }

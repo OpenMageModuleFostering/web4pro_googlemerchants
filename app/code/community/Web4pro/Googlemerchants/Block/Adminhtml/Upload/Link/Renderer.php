@@ -28,7 +28,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Upload_Link_Renderer extends Varie
         $html = '<div>
             <h3>Import google categories in two easy steps:</h3>
             <ul style="list-style-type: circle;">
-                <li><p>1. Download file with google merchants categories <a href="https://support.google.com/merchants/answer/160081">here:</a></p>
+                <li><p>1. Download file with google merchants categories <a href="https://support.google.com/merchants/answer/160081" target="_blank">here:</a></p>
                     <div id="upload-hint-image">
                         <img src="https://docs.google.com/drawings/d/1WB73TBx5S7Q9gfRzzh98BR_qLaHWGn8zJ-1KrKXhcvA/pub?w=749&h=462" alt="Download file with categories">
                     </div>

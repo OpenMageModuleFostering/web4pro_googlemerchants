@@ -2,6 +2,7 @@
 <layout>
     <adminhtml_googlemerchants_index>
         <reference name="head">
+            <action method="addCss"><name>web4pro_googlemerchants/googlemerchants.css</name></action>
             <action method="addItem">
                 <type>js</type>
                 <name>extjs/ext-tree.js</name>
@@ -48,8 +49,11 @@
         </reference>
     </adminhtml_googlemerchants_downloadtxt>
     <adminhtml_googlemerchants_feed>
+        <reference name="head">
+            <action method="addCss"><name>web4pro_googlemerchants/googlemerchants.css</name></action>
+        </reference>
         <reference name="left">
-            <block type="adminhtml/system_config_switcher" name="adminhtml.system.config.switcher" before="-"/>
+            <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher" />
         </reference>
         <reference name="content">
             <block type="googlemerchants/adminhtml_editfeed">

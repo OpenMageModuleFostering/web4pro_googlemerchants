@@ -41,7 +41,7 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
 
     public function getSelectHtml($nameIndex = 0, $selectedVal = '')
     {
-        $retStr = '<select class="required-entry select" name="attribute-select[' . $nameIndex . ']">';
+        $retStr = '<select class="required-entry select select-googlefeed" name="attribute-select[' . $nameIndex . ']">';
         $retStr .= $this->getOptionsHtml($selectedVal);
         $retStr .= '</select>';
         return $retStr;
@@ -78,17 +78,37 @@ class Web4pro_Googlemerchants_Block_Adminhtml_Editfeed_Edit_Form extends Mage_Ad
         $index = 0;
         $resStr = '';
         foreach ($data as $val) {
-            if (!isset($val['value']) || !isset($val['selected'])) {
+            $attributeExists = $this->_isAttributeExists($val['selected']['value']);
+            if (!isset($val['value']) || !isset($val['selected']) || !$attributeExists) {
                 continue;
             }
-            $resStr .= '<tr id="table-row-' . $index . '">';
+            $resStr .= '<tr id="table-row-' . $index . '" class="table-row-googlefeed">';
             $resStr .= '<td><input class="required-entry" name="feed-col-name[' . $index . ']" value="' . $val['value'] . '"/></td>';
-            $resStr .= '<td>' . $this->getSelectHtml($index, $val['selected']) . '</td>';
+            $resStr .= '<td><input name="feed-pref-name[' . $index . ']" value="' . $val['selected']['pref'] . '" class="prefix-postfix-input-field"/></td>';
+            $resStr .= '<td>' . $this->getSelectHtml($index, $val['selected']['value']) . '</td>';
+            $resStr .= '<td><input name="feed-postf-name[' . $index . ']" value="' . $val['selected']['postf'] . '"  class="prefix-postfix-input-field"/></td>';
             $resStr .= '<td>' . $this->getRemoveRowButtonHtml($index) . '</td>';
             $resStr .= '</tr>';
             $index++;
         }
         return $resStr;
+    }
+
+    /**
+     * Check if attribute exists
+     * @param $attributeCode
+     */
+
+    protected function _isAttributeExists($attributeCode)
+    {
+        $entity = 'catalog_product';
+        $attr = Mage::getResourceModel('catalog/eav_attribute')
+            ->loadByCode($entity,$attributeCode);
+        $isDefaultAttr = Mage::getModel('googlemerchants/googlefeed')->isDefaultAttributeCode($attributeCode);
+        if($attr->getId() || $isDefaultAttr){
+            return true;
+        }
+        return false;
     }
 
     /**

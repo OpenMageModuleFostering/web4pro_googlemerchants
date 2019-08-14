@@ -20,7 +20,8 @@ class Web4pro_Googlemerchants_Block_Adminhtml_System_Instruction extends Mage_Ad
                                     <li><p>And the last step is setting up feed. You need to choose necessary attributes, which you would like to import.</p>
                                         <p>Go to <a href="' . $this->_getFeedSettingsUrl() . '">Web4pro → Manage Google Merchants settings → Configure Feed settings </a>:
                                             and setup all necessary attributes according to <a href="https://support.google.com/merchants/answer/188494" target="_blank">feed specification</a>:</p>
-                                            <img src="https://docs.google.com/drawings/d/1_e2PsWJTsMIDuFt0Mgp6hWHGLyvWnD7rfh84gRMlfwk/pub?w=650&h=370" alt="Set up feed settings" width="650">
+                                            <p><b>Please Note:</b> some fields in google feen need the postfix or the prefix to be setted.</p>
+                                            <img src="https://docs.google.com/drawings/d/1ZDkUUOBwtkLoFHrifmgSgzM87wln1qNlAuwJ6M5vzJw/pub?w=854&h=615" alt="Set up feed settings" width="650">
                                         </li>
 
                                     <li>Set up necessary settings of importing products  (Web4pro → Manage Google Merchants settings → Manage Google Merchants settings -> Manage Google Feed settings) ↓ :

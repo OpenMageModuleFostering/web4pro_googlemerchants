@@ -20,18 +20,41 @@
             location.href = url;
         }
     }
-    function saveGCategoryLink() {
+    function saveGCategoryLink(needReload) {
+        clearAllMessages();
+        if(needReload == undefined){
+            needReload = false;
+        }
         var googleCatId = tree.currentNodeId;
-        var storeCatId = $('category_to_linking').selectedIndex;
+        var storeCatId = $('category_to_linking').value;
         var url = '<?php echo $this->getSaveStoreCategoryLinkUrl()?>';
         var params = {google_category_id: googleCatId, store_category_id: storeCatId};
+
         new Ajax.Request(url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ), {
             parameters: params,
             onComplete: function (responce) {
-                if (responce.responseJSON.error) {
+                if(responce.responseJSON.message_block_html){
+                    showResponceMessage(responce.responseJSON.message_block_html);
+                }
+                if (responce.responseJSON.error && needReload) {
                     window.location.reload();
                 }
             }
+        });
+    }
+    function showResponceMessage(responceHtml)
+    {
+        //getting existing message block
+        var existingMessageBlock = $('messages');
+        existingMessageBlock.innerHTML += responceHtml;
+
+    }
+
+    function clearAllMessages()
+    {
+        var existingMessageBlock = $$('div[class="ajax-msg"]');
+        existingMessageBlock.each(function(el){
+            el.remove();
         });
     }
 
@@ -79,14 +102,15 @@
                     if (transport.responseText.length > 0) {
                         var respObj = transport.responseText.evalJSON();
                         if (respObj.store_category_id != null) {
-                            $('category_to_linking').selectedIndex = respObj.store_category_id;
+                            $('category_to_linking').value = respObj.store_category_id;
                         }
                         else {
-                            $('category_to_linking').selectedIndex = 0;
+                            $('category_to_linking').value = 0;
                         }
                         if (respObj.is_root) {
                             $('category_to_linking_submit').setAttribute('disabled', 'disabled');
                             $('category_to_linking').setAttribute('disabled', 'disabled');
+                            showRootCategoryMessage();
                         }
                         else {
                             $('category_to_linking_submit').removeAttribute('disabled');
@@ -100,6 +124,17 @@
             }
         });
     }
+
+    /**
+     *
+     * Shows message if selected category is root.
+     * */
+    function showRootCategoryMessage()
+    {
+        var messageText = 'Please select different from root category!';
+        alert(messageText);
+    }
+
 
     /**
      * Refresh tree nodes after saving or deleting a category
