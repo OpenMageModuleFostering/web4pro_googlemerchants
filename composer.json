@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/Web4pro_Googlemerchants",
+    "name": "OpenMageModuleFostering\/Web4pro_Googlemerchants",
     "type": "magento-module",
     "license": "OSL-v.3",
     "homepage": "",
     "description": "Extension for generation feeds for importing products to google service.",
     "authors": [
-    {
-        "name": "Alex",
-        "email": "achernyshev@corp.web4pro.com.ua"
-    }
-],
+        {
+            "name": "Alex",
+            "email": "achernyshev@corp.web4pro.com.ua"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
